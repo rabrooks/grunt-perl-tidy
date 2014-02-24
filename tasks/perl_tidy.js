@@ -29,6 +29,8 @@ module.exports = function(grunt) {
           grunt.log.warn('Source file "' + filepath + '" not found.');
           return false;
         } else {
+          // Use this to preform logic on each file that is in the group
+          conosle.log (filepath);
           return true;
         }
       }).map(function(filepath) {
