@@ -10,43 +10,91 @@
 
 module.exports = function(grunt) {
 
+
+  var path = require('path');
+  var exec = require('child_process').exec;
+
   // Please see the Grunt documentation for more information regarding task
   // creation: http://gruntjs.com/creating-tasks
 
   grunt.registerMultiTask('perl_tidy', 'Run perl tidy on perl files.', function() {
-    // Merge task-specific and/or target-specific options with these defaults.
+
+// Merge task-specific and/or target-specific options with these defaults.
     var options = this.options({
-      punctuation: '.',
-      separator: ', '
+      cuddleElse: false,
+      bracketsLeft: false,
+      parensAlign: false, 
+      indentation: 4,
+      continuation: 2,
+      tabs: false,
+      formatInPlace: false,
+
     });
 
-    // Iterate over all specified file groups.
-    this.files.forEach(function(f) {
-      // Concat specified files.
-      var src = f.src.filter(function(filepath) {
-        // Warn on and remove invalid source files (if nonull was set).
-        if (!grunt.file.exists(filepath)) {
-          grunt.log.warn('Source file "' + filepath + '" not found.');
-          return false;
-        } else {
-          // Use this to preform logic on each file that is in the group
-          conosle.log (filepath);
-          return true;
+    grunt.verbose.writeflags(options, 'Options');
+
+    this.files.forEach(function(filePair) {
+      var isExpandedPair = filePair.orig.expand || false;
+
+      filePair.src.forEach(function(srcFile) {
+        try {
+
+          if (grunt.file.isDir(srcFile)) {
+            return;
+          }
+
+          var regex = new RegExp(escapeRegExp(path.basename(srcFile)) + "$");
+          
+          var cmd = 'perltidy ';
+          
+          if (options.formatInPlace === true) {
+            cmd += '-b ';
+          } 
+          if (options.cuddleElse === true) {
+            cmd += '-ce ';
+          } 
+          if (options.bracketsLeft === true) {
+            cmd += '-bl ';
+          } 
+          if (options.tabs === true) {
+            cmd += '-et=' + options.indentation + ' ';
+          }
+          if (options.indentation) {
+            cmd += '-i='  + options.indentation + ' ';
+          }
+
+
+          cmd += srcFile;
+          if (options.debug === true) {
+            grunt.log.writeln(cmd);
+          }
+
+          grunt.verbose.writeln('Exec: ' + cmd);
+
+          // Execute command.
+          exec(cmd, function( err, stdout, stderr) {
+            if (stdout) {
+              grunt.log.write(stdout);
+            }
+
+            if (err) {
+              grunt.fatal(err);
+            }
+          });
+
+        } catch(err) {
+          grunt.log.error(err);
+          grunt.fail.warn('Perl Tidy has failed.');
         }
-      }).map(function(filepath) {
-        // Read file source.
-        return grunt.file.read(filepath);
-      }).join(grunt.util.normalizelf(options.separator));
-
-      // Handle options.
-      src += options.punctuation;
-
-      // Write the destination file.
-      grunt.file.write(f.dest, src);
-
-      // Print a success message.
-      grunt.log.writeln('File "' + f.dest + '" is now all tidy.');
+      });
     });
-  });
+
+    grunt.log.writeln(' Perltidy has finished.');
+  }); // end of rgisterMultiTask
+
+
+  var escapeRegExp = function(str) {
+    return str.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+  };
 
 };
