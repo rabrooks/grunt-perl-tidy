@@ -1,8 +1,0 @@
-
-1: 1 2 3
-   - ^  
-found Number where operator expected (previous token underlined)
-
-1: 1 2 3
-     - ^
-found Number where operator expected (previous token underlined)

@@ -72,8 +72,8 @@ In this example, custom options are used to do something else with whatever else
 grunt.initConfig({
   perl_tidy: {
     options: {
-      separator: ': ',
-      punctuation: ' !!!',
+      formatInPlace: true,
+      indentation: 4,
     },
     files: {
       'dest/default_options': ['src/testing', 'src/123'],

@@ -1,3 +1,7 @@
+#!usr/bin/perl
+
+use 'strict';
+
  print "Help Desk -- What Editor do you use?";
  chomp($editor = <STDIN>);
  if ($editor =~ /emacs/i) {

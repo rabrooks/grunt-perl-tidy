@@ -1,1 +1,45 @@
-1 2 3
+#!usr/bin/perl
+
+use 'strict';
+
+sub init {
+
+    my %texthash = (
+        "morning"   => "Good Morning",
+        "afternoon" => "Good Afternoon",
+        "nigh"      => "Good Night"
+    );
+
+    if ( 1 == 1 ) {
+
+        # DO STUFF HERE
+    }
+    elsif ( 1 == 2 ) {
+
+        # Probably not going to run this code
+    }
+    else {
+        # Not Going to run this
+    }
+
+    greeting();
+
+}
+
+sub greeting {
+
+    print 'Hello !!';
+
+}
+un this
+        }
+
+        greeting();
+
+}
+
+sub greeting {
+
+        print 'Hello !!';
+
+}
